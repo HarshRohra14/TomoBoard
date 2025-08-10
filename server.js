@@ -54,5 +54,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`TomoBoard server is running on http://localhost:\${PORT}\`);
+  console.log(`TomoBoard server is running on http://localhost:${PORT}`);
 });
