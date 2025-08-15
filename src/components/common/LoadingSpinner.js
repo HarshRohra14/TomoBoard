@@ -28,11 +28,11 @@ const LoadingSpinner = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          <h2 className="text-lg font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">
             Loading TomoBoard
           </h2>
-          <p className="text-gray-600">
-            Preparing your collaborative workspace...
+          <p className="text-text-secondary-light dark:text-text-secondary-dark">
+            Preparing your Sakura workspace...
           </p>
         </motion.div>
       </motion.div>
