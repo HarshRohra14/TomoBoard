@@ -32,17 +32,17 @@ const Sidebar = ({ activeTab, onTabChange }) => {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-64 bg-white border-r border-gray-200 flex flex-col h-full"
+      className="sidebar w-64 flex flex-col h-full"
     >
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-border-light dark:border-border-dark">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-sakura-600 dark:bg-sakura-500 rounded-lg flex items-center justify-center animate-sakura-bloom">
             <span className="text-white font-bold text-lg">T</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">TomoBoard</h1>
-            <p className="text-xs text-gray-500">Collaborative Platform</p>
+            <h1 className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">TomoBoard</h1>
+            <p className="text-xs text-text-muted-light dark:text-text-muted-dark">Sakura Edition</p>
           </div>
         </div>
       </div>
@@ -67,27 +67,27 @@ const Sidebar = ({ activeTab, onTabChange }) => {
       </nav>
 
       {/* User Profile */}
-      <div className="p-4 border-t border-gray-200 space-y-3">
+      <div className="p-4 border-t border-border-light dark:border-border-dark space-y-3">
         {/* User Info */}
-        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <img
             src={user?.avatar}
             alt={user?.name}
             className="w-10 h-10 rounded-full"
           />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark truncate">
               {user?.name}
             </p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            <p className="text-xs text-text-muted-light dark:text-text-muted-dark truncate">{user?.email}</p>
           </div>
           <div className="flex items-center">
             {user?.plan === 'free' ? (
-              <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
+              <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
                 Free
               </span>
             ) : (
-              <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+              <span className="text-xs bg-sakura-200 dark:bg-sakura-800 text-sakura-800 dark:text-sakura-200 px-2 py-1 rounded">
                 Pro
               </span>
             )}
@@ -100,9 +100,9 @@ const Sidebar = ({ activeTab, onTabChange }) => {
             <Settings className="h-5 w-5" />
             <span>Settings</span>
           </button>
-          <button 
+          <button
             onClick={handleLogout}
-            className="sidebar-item w-full text-red-600 hover:bg-red-50"
+            className="sidebar-item w-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <LogOut className="h-5 w-5" />
             <span>Sign out</span>

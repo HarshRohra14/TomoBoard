@@ -3,33 +3,134 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply transition-colors duration-300;
+  }
+  
   body {
-    @apply font-sans bg-gray-50 text-gray-900;
+    @apply font-sans transition-colors duration-300;
+    @apply bg-background-light text-text-primary-light;
+    @apply dark:bg-background-dark dark:text-text-primary-dark;
   }
 }
 
 @layer components {
+  /* Primary button with Sakura pink theme */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-sakura-600 hover:bg-sakura-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+    @apply focus:ring-2 focus:ring-sakura-500 focus:ring-offset-2;
+    @apply dark:focus:ring-offset-background-dark;
+    @apply shadow-sm hover:shadow-md;
   }
   
+  /* Secondary button adapts to theme */
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-gray-100 hover:bg-gray-200 text-text-primary-light font-medium py-2 px-4 rounded-lg transition-all duration-200;
+    @apply dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-text-primary-dark;
+    @apply border border-border-light dark:border-border-dark;
+    @apply focus:ring-2 focus:ring-sakura-500 focus:ring-offset-2;
+    @apply dark:focus:ring-offset-background-dark;
   }
   
+  /* Input fields with Sakura accent */
   .input-field {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+    @apply block w-full px-3 py-2 rounded-lg shadow-sm transition-all duration-200;
+    @apply bg-surface-light text-text-primary-light;
+    @apply dark:bg-surface-dark dark:text-text-primary-dark;
+    @apply border border-border-light dark:border-border-dark;
+    @apply focus:outline-none focus:ring-2 focus:ring-sakura-500 focus:border-sakura-500;
+    @apply dark:focus:ring-sakura-400 dark:focus:border-sakura-400;
+    @apply placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark;
   }
   
+  /* Card component with theme support */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+    @apply bg-surface-light rounded-xl shadow-sm border border-border-light p-6;
+    @apply dark:bg-surface-dark dark:border-border-dark;
+    @apply transition-all duration-200;
+    @apply hover:shadow-md dark:hover:shadow-lg;
   }
   
+  /* Sidebar items with Sakura accents */
   .sidebar-item {
-    @apply flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 cursor-pointer;
+    @apply flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer;
+    @apply text-text-secondary-light hover:bg-gray-100;
+    @apply dark:text-text-secondary-dark dark:hover:bg-gray-800;
+    @apply hover:text-text-primary-light dark:hover:text-text-primary-dark;
   }
   
   .sidebar-item.active {
-    @apply bg-primary-100 text-primary-700;
+    @apply bg-sakura-100 text-sakura-700;
+    @apply dark:bg-sakura-900/30 dark:text-sakura-300;
+    @apply shadow-sm;
+  }
+  
+  /* Theme toggle button */
+  .theme-toggle {
+    @apply p-2 rounded-lg transition-all duration-200;
+    @apply bg-gray-100 hover:bg-gray-200 text-text-primary-light;
+    @apply dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-text-primary-dark;
+    @apply border border-border-light dark:border-border-dark;
+    @apply focus:ring-2 focus:ring-sakura-500 focus:ring-offset-2;
+    @apply dark:focus:ring-offset-background-dark;
+  }
+  
+  /* Notification badge with Sakura accent */
+  .notification-badge {
+    @apply bg-sakura-500 text-white text-xs rounded-full;
+    @apply dark:bg-sakura-400 dark:text-gray-900;
+  }
+  
+  /* Header styling */
+  .header {
+    @apply bg-surface-light border-b border-border-light;
+    @apply dark:bg-surface-dark dark:border-border-dark;
+    @apply transition-colors duration-200;
+  }
+  
+  /* Sidebar styling */
+  .sidebar {
+    @apply bg-surface-light border-r border-border-light;
+    @apply dark:bg-surface-dark dark:border-border-dark;
+    @apply transition-colors duration-200;
+  }
+  
+  /* Loading spinner with Sakura colors */
+  .loading-spinner {
+    @apply text-sakura-500 dark:text-sakura-400;
+  }
+}
+
+/* Custom scrollbar for dark mode */
+@layer utilities {
+  .scrollbar-sakura {
+    scrollbar-width: thin;
+    scrollbar-color: theme(colors.sakura.400) transparent;
+  }
+  
+  .scrollbar-sakura::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-sakura::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-sakura::-webkit-scrollbar-thumb {
+    background-color: theme(colors.sakura.400);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-sakura::-webkit-scrollbar-thumb:hover {
+    background-color: theme(colors.sakura.500);
+  }
+  
+  /* Dark mode scrollbar */
+  .dark .scrollbar-sakura::-webkit-scrollbar-thumb {
+    background-color: theme(colors.sakura.300);
+  }
+  
+  .dark .scrollbar-sakura::-webkit-scrollbar-thumb:hover {
+    background-color: theme(colors.sakura.400);
   }
 }
