@@ -110,7 +110,7 @@ const Header = ({ activeTab, title, subtitle }) => {
               <action.icon className="h-4 w-4" />
               <span>{action.label}</span>
               {action.count && (
-                <span className="bg-primary-600 text-white text-xs rounded-full px-2 py-1">
+                <span className="notification-badge px-2 py-1">
                   {action.count}
                 </span>
               )}
