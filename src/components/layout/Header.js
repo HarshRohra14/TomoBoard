@@ -77,7 +77,7 @@ const Header = ({ activeTab, title, subtitle }) => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="bg-white border-b border-gray-200 px-6 py-4"
+      className="header px-6 py-4"
     >
       <div className="flex items-center justify-between">
         {/* Title Section */}
