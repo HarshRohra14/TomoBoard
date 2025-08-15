@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   return (
     <WebSocketProvider>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-background-light dark:bg-background-dark transition-colors duration-300">
         {/* Sidebar */}
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
         
