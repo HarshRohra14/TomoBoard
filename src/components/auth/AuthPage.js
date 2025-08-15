@@ -7,7 +7,7 @@ const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-sakura-50 to-pink-100 dark:from-gray-900 dark:to-black flex items-center justify-center p-4 transition-colors duration-300">
       <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
