@@ -76,10 +76,10 @@ const Sidebar = ({ activeTab, onTabChange }) => {
             className="w-10 h-10 rounded-full"
           />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark truncate">
               {user?.name}
             </p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            <p className="text-xs text-text-muted-light dark:text-text-muted-dark truncate">{user?.email}</p>
           </div>
           <div className="flex items-center">
             {user?.plan === 'free' ? (
