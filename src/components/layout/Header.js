@@ -117,10 +117,13 @@ const Header = ({ activeTab, title, subtitle }) => {
             </button>
           ))}
 
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Notifications */}
-          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+          <button className="relative p-2 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">
             <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-sakura-500 dark:bg-sakura-400 text-white dark:text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center">
               2
             </span>
           </button>
