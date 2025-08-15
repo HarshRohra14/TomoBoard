@@ -35,14 +35,14 @@ const Sidebar = ({ activeTab, onTabChange }) => {
       className="sidebar w-64 flex flex-col h-full"
     >
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-border-light dark:border-border-dark">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-sakura-600 dark:bg-sakura-500 rounded-lg flex items-center justify-center animate-sakura-bloom">
             <span className="text-white font-bold text-lg">T</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">TomoBoard</h1>
-            <p className="text-xs text-gray-500">Collaborative Platform</p>
+            <h1 className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">TomoBoard</h1>
+            <p className="text-xs text-text-muted-light dark:text-text-muted-dark">Sakura Edition</p>
           </div>
         </div>
       </div>
