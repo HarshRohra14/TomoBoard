@@ -1,13 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Users, 
-  Share2, 
-  Save, 
+import {
+  Users,
+  Share2,
+  Save,
   Download,
   Bell,
   Search,
-  Plus
+  Plus,
+  Sparkles
 } from 'lucide-react';
 
 const Header = ({ activeTab, title, subtitle }) => {
