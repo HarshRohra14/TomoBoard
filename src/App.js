@@ -19,11 +19,13 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <div className="App">
-          <AppContent />
-        </div>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <div className="App">
+            <AppContent />
+          </div>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }
