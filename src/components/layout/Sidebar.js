@@ -67,9 +67,9 @@ const Sidebar = ({ activeTab, onTabChange }) => {
       </nav>
 
       {/* User Profile */}
-      <div className="p-4 border-t border-gray-200 space-y-3">
+      <div className="p-4 border-t border-border-light dark:border-border-dark space-y-3">
         {/* User Info */}
-        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <img
             src={user?.avatar}
             alt={user?.name}
