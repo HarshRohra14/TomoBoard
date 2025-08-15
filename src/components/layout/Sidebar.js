@@ -83,11 +83,11 @@ const Sidebar = ({ activeTab, onTabChange }) => {
           </div>
           <div className="flex items-center">
             {user?.plan === 'free' ? (
-              <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
+              <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
                 Free
               </span>
             ) : (
-              <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+              <span className="text-xs bg-sakura-200 dark:bg-sakura-800 text-sakura-800 dark:text-sakura-200 px-2 py-1 rounded">
                 Pro
               </span>
             )}
