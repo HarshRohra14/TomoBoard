@@ -32,7 +32,7 @@ const Sidebar = ({ activeTab, onTabChange }) => {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-64 bg-white border-r border-gray-200 flex flex-col h-full"
+      className="sidebar w-64 flex flex-col h-full"
     >
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
