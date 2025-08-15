@@ -20,12 +20,12 @@ const AuthPage = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-xl mb-4"
+              className="inline-flex items-center justify-center w-16 h-16 bg-sakura-600 dark:bg-sakura-500 rounded-xl mb-4 animate-sakura-bloom"
             >
               <span className="text-2xl font-bold text-white">T</span>
             </motion.div>
-            <h1 className="text-2xl font-bold text-gray-900">TomoBoard</h1>
-            <p className="text-gray-600">Collaborative Whiteboard Platform</p>
+            <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">TomoBoard</h1>
+            <p className="text-text-secondary-light dark:text-text-secondary-dark">Sakura Collaborative Platform</p>
           </div>
 
           {isLogin ? (
