@@ -39,15 +39,15 @@ const AuthPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-8 text-center text-sm text-gray-500"
+          className="mt-8 text-center text-sm text-text-muted-light dark:text-text-muted-dark"
         >
           <p>
             By continuing, you agree to our{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-700">
+            <a href="#" className="text-sakura-600 hover:text-sakura-700 dark:text-sakura-400 dark:hover:text-sakura-300">
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-700">
+            <a href="#" className="text-sakura-600 hover:text-sakura-700 dark:text-sakura-400 dark:hover:text-sakura-300">
               Privacy Policy
             </a>
           </p>
