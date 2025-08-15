@@ -82,8 +82,8 @@ const Header = ({ activeTab, title, subtitle }) => {
       <div className="flex items-center justify-between">
         {/* Title Section */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{title || tabInfo.title}</h1>
-          <p className="text-sm text-gray-600">{subtitle || tabInfo.subtitle}</p>
+          <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">{title || tabInfo.title}</h1>
+          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
         </div>
 
         {/* Search Bar */}
