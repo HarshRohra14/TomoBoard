@@ -10,6 +10,7 @@ import {
   Plus,
   Sparkles
 } from 'lucide-react';
+import ThemeToggle from '../common/ThemeToggle';
 
 const Header = ({ activeTab, title, subtitle }) => {
   const getTabInfo = () => {
