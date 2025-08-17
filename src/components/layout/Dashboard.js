@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { WebSocketProvider } from '../../contexts/WebSocketContext';
+import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import WhiteboardTab from '../tabs/WhiteboardTab';
@@ -15,6 +16,13 @@ const Dashboard = () => {
   const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+
+  // Keyboard shortcuts
+  const { shortcuts } = useKeyboardShortcuts({
+    onToggleSidebar: () => setIsSidebarVisible(!isSidebarVisible),
+    onToggleToolbar: () => setIsToolbarVisible(!isToolbarVisible),
+    activeTab
+  });
 
   const renderActiveTab = () => {
     switch (activeTab) {
