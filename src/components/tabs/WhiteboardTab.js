@@ -4,7 +4,7 @@ import WhiteboardCanvas from '../whiteboard/WhiteboardCanvas';
 import WhiteboardToolbar from '../whiteboard/WhiteboardToolbar';
 import { Users, Share2 } from 'lucide-react';
 
-const WhiteboardTab = () => {
+const WhiteboardTab = ({ isToolbarVisible = true, isSidebarVisible = true }) => {
   const [activeTool, setActiveTool] = useState('pen');
   const [color, setColor] = useState('#000000');
   const [strokeWidth, setStrokeWidth] = useState(2);
@@ -49,25 +49,28 @@ const WhiteboardTab = () => {
   return (
     <div className="flex h-full relative">
       {/* Toolbar */}
-      <motion.div
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-64 sm:w-72 lg:w-80 p-4 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto z-10 flex-shrink-0"
-      >
-        <WhiteboardToolbar
-          activeTool={activeTool}
-          onToolChange={setActiveTool}
-          color={color}
-          onColorChange={setColor}
-          strokeWidth={strokeWidth}
-          onStrokeWidthChange={setStrokeWidth}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
-          onClear={handleClear}
-          onExport={handleExport}
-        />
-      </motion.div>
+      {isToolbarVisible && (
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -20, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-64 sm:w-72 lg:w-80 p-4 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto z-10 flex-shrink-0"
+        >
+          <WhiteboardToolbar
+            activeTool={activeTool}
+            onToolChange={setActiveTool}
+            color={color}
+            onColorChange={setColor}
+            strokeWidth={strokeWidth}
+            onStrokeWidthChange={setStrokeWidth}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            onClear={handleClear}
+            onExport={handleExport}
+          />
+        </motion.div>
+      )}
 
       {/* Main Canvas Area */}
       <div className="flex-1 relative min-w-0">
@@ -121,6 +124,8 @@ const WhiteboardTab = () => {
             color={color}
             strokeWidth={strokeWidth}
             onCanvasReady={handleCanvasReady}
+            isToolbarVisible={isToolbarVisible}
+            isSidebarVisible={isSidebarVisible}
           />
         </motion.div>
 
