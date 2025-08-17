@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
 import ViewToggle from '../common/ViewToggle';
+import ShortcutsIndicator from '../common/ShortcutsIndicator';
 
 const Header = ({
   activeTab,
@@ -20,7 +21,8 @@ const Header = ({
   isSidebarVisible,
   isToolbarVisible,
   onToggleSidebar,
-  onToggleToolbar
+  onToggleToolbar,
+  shortcuts = []
 }) => {
   const getTabInfo = () => {
     switch (activeTab) {
@@ -151,6 +153,9 @@ const Header = ({
               )}
             </button>
           ))}
+
+          {/* Shortcuts Indicator */}
+          <ShortcutsIndicator shortcuts={shortcuts} />
 
           {/* Theme Toggle */}
           <ThemeToggle />
