@@ -13,6 +13,8 @@ import CollaborationPanel from '../collaboration/CollaborationPanel';
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('whiteboard');
   const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -35,14 +37,22 @@ const Dashboard = () => {
     <WebSocketProvider>
       <div className="flex h-screen bg-background-light dark:bg-background-dark transition-colors duration-300 overflow-hidden">
         {/* Sidebar */}
-        <div className="flex-shrink-0 z-40">
-          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
+        {isSidebarVisible && (
+          <div className="flex-shrink-0 z-40">
+            <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           <div className="flex-shrink-0">
-            <Header activeTab={activeTab} />
+            <Header
+              activeTab={activeTab}
+              isSidebarVisible={isSidebarVisible}
+              isToolbarVisible={isToolbarVisible}
+              onToggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)}
+              onToggleToolbar={() => setIsToolbarVisible(!isToolbarVisible)}
+            />
           </div>
 
           {/* Content Area */}
@@ -54,7 +64,14 @@ const Dashboard = () => {
               transition={{ duration: 0.3 }}
               className="h-full overflow-hidden"
             >
-              {renderActiveTab()}
+              {activeTab === 'whiteboard' ? (
+                <WhiteboardTab
+                  isToolbarVisible={isToolbarVisible}
+                  isSidebarVisible={isSidebarVisible}
+                />
+              ) : (
+                renderActiveTab()
+              )}
             </motion.div>
 
             {/* Collaboration Panel */}
