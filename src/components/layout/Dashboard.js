@@ -60,6 +60,7 @@ const Dashboard = () => {
               isToolbarVisible={isToolbarVisible}
               onToggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)}
               onToggleToolbar={() => setIsToolbarVisible(!isToolbarVisible)}
+              shortcuts={shortcuts}
             />
           </div>
 
