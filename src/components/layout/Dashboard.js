@@ -33,26 +33,30 @@ const Dashboard = () => {
 
   return (
     <WebSocketProvider>
-      <div className="flex h-screen bg-background-light dark:bg-background-dark transition-colors duration-300">
+      <div className="flex h-screen bg-background-light dark:bg-background-dark transition-colors duration-300 overflow-hidden">
         {/* Sidebar */}
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        
+        <div className="flex-shrink-0 z-40">
+          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header activeTab={activeTab} />
-          
+        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+          <div className="flex-shrink-0">
+            <Header activeTab={activeTab} />
+          </div>
+
           {/* Content Area */}
-          <main className="flex-1 overflow-auto relative">
+          <main className="flex-1 overflow-hidden relative">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="h-full"
+              className="h-full overflow-hidden"
             >
               {renderActiveTab()}
             </motion.div>
-            
+
             {/* Collaboration Panel */}
             <CollaborationPanel
               isOpen={isCollaborationOpen}
