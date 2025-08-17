@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 
-const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
+const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVisible = true, isSidebarVisible = true }) => {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -9,9 +9,15 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
   useEffect(() => {
     // Calculate responsive canvas dimensions
     const calculateCanvasDimensions = () => {
-      const sidebarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
+      const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
+      const mainSidebarWidth = 256; // Main sidebar width
       const headerHeight = 80; // Approximate header height
-      const availableWidth = window.innerWidth - sidebarWidth - 256; // Account for main sidebar
+
+      let totalSidebarWidth = 0;
+      if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
+      if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
+
+      const availableWidth = window.innerWidth - totalSidebarWidth;
       const availableHeight = window.innerHeight - headerHeight;
 
       return {
@@ -53,13 +59,22 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
       window.removeEventListener('resize', handleResize);
       canvas.dispose();
     };
-  }, []);
+  }, [isToolbarVisible, isSidebarVisible]);
 
   useEffect(() => {
     if (fabricCanvasRef.current) {
       updateCanvasMode(fabricCanvasRef.current, tool);
     }
   }, [tool, color, strokeWidth]);
+
+  // Update canvas dimensions when sidebar/toolbar visibility changes
+  useEffect(() => {
+    if (fabricCanvasRef.current) {
+      const { width, height } = calculateCanvasDimensions();
+      fabricCanvasRef.current.setDimensions({ width, height });
+      fabricCanvasRef.current.renderAll();
+    }
+  }, [isToolbarVisible, isSidebarVisible]);
 
   const updateCanvasMode = (canvas, currentTool) => {
     // Clear any existing drawing mode
