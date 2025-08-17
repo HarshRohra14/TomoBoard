@@ -49,7 +49,20 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVi
 
     // Handle window resize
     const handleResize = () => {
-      const { width, height } = calculateCanvasDimensions();
+      const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320);
+      const mainSidebarWidth = 256;
+      const headerHeight = 80;
+
+      let totalSidebarWidth = 0;
+      if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
+      if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
+
+      const availableWidth = window.innerWidth - totalSidebarWidth;
+      const availableHeight = window.innerHeight - headerHeight;
+
+      const width = Math.max(availableWidth, 400);
+      const height = Math.max(availableHeight, 300);
+
       canvas.setDimensions({ width, height });
       canvas.renderAll();
     };
