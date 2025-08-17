@@ -128,7 +128,7 @@ const Login = ({ onSwitchToSignup }) => {
         </div>
         <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
           <p>Email: demo@tomoboard.com</p>
-          <p>Password: demo123</p>
+          <p>Password: password123</p>
         </div>
       </div>
     </motion.div>
