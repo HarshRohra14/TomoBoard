@@ -99,12 +99,12 @@ export const AuthProvider = ({ children }) => {
   const signup = async (name, email, password) => {
     try {
       setError(null);
-      
+
       // Split name into firstName and lastName
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       const response = await authAPI.signup({
         email,
         username: email.split('@')[0], // Generate username from email
@@ -112,19 +112,54 @@ export const AuthProvider = ({ children }) => {
         firstName,
         lastName,
       });
-      
+
       const { user: userData, tokens } = response.data;
-      
+
       // Store tokens
       localStorage.setItem('accessToken', tokens.accessToken);
       localStorage.setItem('refreshToken', tokens.refreshToken);
-      
+
       // Set user with token for WebSocket
       const userWithToken = { ...userData, token: tokens.accessToken };
       setUser(userWithToken);
-      
+
       return { success: true };
     } catch (err) {
+      console.error('Signup error:', err);
+
+      // Network error fallback
+      if (err.code === 'ERR_NETWORK' || err.message === 'Network Error' || !err.response) {
+        console.log('Network error detected, using offline signup');
+
+        try {
+          const nameParts = name.trim().split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+
+          const response = await offlineAuth.signup({
+            email,
+            username: email.split('@')[0],
+            password,
+            firstName,
+            lastName,
+          });
+
+          const { user: userData, tokens } = response.data;
+
+          localStorage.setItem('accessToken', tokens.accessToken);
+          localStorage.setItem('refreshToken', tokens.refreshToken);
+
+          const userWithToken = { ...userData, token: tokens.accessToken };
+          setUser(userWithToken);
+
+          return { success: true };
+        } catch (offlineErr) {
+          const message = 'Offline signup failed. Try again.';
+          setError(message);
+          return { success: false, error: message };
+        }
+      }
+
       const message = err.response?.data?.error || 'Signup failed. Please try again.';
       setError(message);
       return { success: false, error: message };
