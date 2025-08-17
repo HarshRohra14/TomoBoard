@@ -26,12 +26,11 @@ export const WebSocketProvider = ({ children }) => {
     if (user) {
       // Initialize socket connection
       const newSocket = io(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:3001', {
-        query: {
-          userId: user.id,
-          userName: user.name,
-          userAvatar: user.avatar,
+        auth: {
+          token: user.token || localStorage.getItem('accessToken'),
         },
         autoConnect: true,
+        transports: ['websocket', 'polling'],
       });
 
       socketRef.current = newSocket;
@@ -41,16 +40,9 @@ export const WebSocketProvider = ({ children }) => {
       newSocket.on('connect', () => {
         console.log('Connected to WebSocket server');
         setIsConnected(true);
-        
-        // Join default room
-        newSocket.emit('join-room', {
-          roomId: roomId,
-          user: {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-          },
-        });
+
+        // Join default whiteboard room
+        newSocket.emit('join-whiteboard', roomId);
       });
 
       newSocket.on('disconnect', () => {
@@ -98,26 +90,27 @@ export const WebSocketProvider = ({ children }) => {
   // WebSocket utility functions
   const joinRoom = (newRoomId) => {
     if (socket && isConnected) {
-      socket.emit('leave-room', { roomId: roomId });
-      socket.emit('join-room', {
-        roomId: newRoomId,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        },
-      });
+      socket.emit('leave-whiteboard', roomId);
+      socket.emit('join-whiteboard', newRoomId);
       setRoomId(newRoomId);
     }
   };
 
-  const sendCanvasUpdate = (canvasData) => {
+  const sendCanvasUpdate = (operation, objectData) => {
     if (socket && isConnected) {
       socket.emit('canvas-update', {
-        roomId: roomId,
-        userId: user.id,
-        data: canvasData,
-        timestamp: new Date().toISOString(),
+        whiteboardId: roomId,
+        operation,
+        objectData,
+      });
+    }
+  };
+
+  const sendCanvasSync = (canvasData) => {
+    if (socket && isConnected) {
+      socket.emit('canvas-sync', {
+        whiteboardId: roomId,
+        canvasData,
       });
     }
   };
@@ -125,23 +118,19 @@ export const WebSocketProvider = ({ children }) => {
   const sendCursorPosition = (x, y) => {
     if (socket && isConnected) {
       socket.emit('cursor-move', {
-        roomId: roomId,
-        userId: user.id,
-        x: x,
-        y: y,
-        timestamp: new Date().toISOString(),
+        whiteboardId: roomId,
+        x,
+        y,
       });
     }
   };
 
-  const sendMessage = (message) => {
+  const sendMessage = (content) => {
     if (socket && isConnected) {
       socket.emit('chat-message', {
-        roomId: roomId,
-        userId: user.id,
-        userName: user.name,
-        message: message,
-        timestamp: new Date().toISOString(),
+        whiteboardId: roomId,
+        content,
+        type: 'TEXT',
       });
     }
   };
@@ -154,6 +143,7 @@ export const WebSocketProvider = ({ children }) => {
     roomId,
     joinRoom,
     sendCanvasUpdate,
+    sendCanvasSync,
     sendCursorPosition,
     sendMessage,
   };
