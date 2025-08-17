@@ -93,6 +93,7 @@
     @apply bg-surface-light border-r border-border-light;
     @apply dark:bg-surface-dark dark:border-border-dark;
     @apply transition-colors duration-200;
+    min-width: 256px;
   }
   
   /* Loading spinner with Sakura colors */
