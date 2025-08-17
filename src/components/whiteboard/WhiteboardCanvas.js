@@ -6,25 +6,26 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVi
   const fabricCanvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  useEffect(() => {
-    // Calculate responsive canvas dimensions
-    const calculateCanvasDimensions = () => {
-      const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
-      const mainSidebarWidth = 256; // Main sidebar width
-      const headerHeight = 80; // Approximate header height
+  // Calculate responsive canvas dimensions
+  const calculateCanvasDimensions = () => {
+    const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
+    const mainSidebarWidth = 256; // Main sidebar width
+    const headerHeight = 80; // Approximate header height
 
-      let totalSidebarWidth = 0;
-      if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
-      if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
+    let totalSidebarWidth = 0;
+    if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
+    if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
 
-      const availableWidth = window.innerWidth - totalSidebarWidth;
-      const availableHeight = window.innerHeight - headerHeight;
+    const availableWidth = window.innerWidth - totalSidebarWidth;
+    const availableHeight = window.innerHeight - headerHeight;
 
-      return {
-        width: Math.max(availableWidth, 400), // Minimum width
-        height: Math.max(availableHeight, 300) // Minimum height
-      };
+    return {
+      width: Math.max(availableWidth, 400), // Minimum width
+      height: Math.max(availableHeight, 300) // Minimum height
     };
+  };
+
+  useEffect(() => {
 
     const { width, height } = calculateCanvasDimensions();
 
