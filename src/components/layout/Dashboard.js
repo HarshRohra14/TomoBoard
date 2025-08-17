@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { WebSocketProvider } from '../../contexts/WebSocketContext';
+import { useToast } from '../../contexts/ToastContext';
 import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -17,10 +18,24 @@ const Dashboard = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
+  const { showToggleToast } = useToast();
+
+  const handleToggleSidebar = () => {
+    const newVisibility = !isSidebarVisible;
+    setIsSidebarVisible(newVisibility);
+    showToggleToast('toggle', 'sidebar', newVisibility);
+  };
+
+  const handleToggleToolbar = () => {
+    const newVisibility = !isToolbarVisible;
+    setIsToolbarVisible(newVisibility);
+    showToggleToast('toggle', 'toolbar', newVisibility);
+  };
+
   // Keyboard shortcuts
   const { shortcuts } = useKeyboardShortcuts({
-    onToggleSidebar: () => setIsSidebarVisible(!isSidebarVisible),
-    onToggleToolbar: () => setIsToolbarVisible(!isToolbarVisible),
+    onToggleSidebar: handleToggleSidebar,
+    onToggleToolbar: handleToggleToolbar,
     activeTab
   });
 
@@ -58,8 +73,8 @@ const Dashboard = () => {
               activeTab={activeTab}
               isSidebarVisible={isSidebarVisible}
               isToolbarVisible={isToolbarVisible}
-              onToggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)}
-              onToggleToolbar={() => setIsToolbarVisible(!isToolbarVisible)}
+              onToggleSidebar={handleToggleSidebar}
+              onToggleToolbar={handleToggleToolbar}
               shortcuts={shortcuts}
             />
           </div>
