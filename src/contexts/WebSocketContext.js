@@ -40,16 +40,9 @@ export const WebSocketProvider = ({ children }) => {
       newSocket.on('connect', () => {
         console.log('Connected to WebSocket server');
         setIsConnected(true);
-        
-        // Join default room
-        newSocket.emit('join-room', {
-          roomId: roomId,
-          user: {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-          },
-        });
+
+        // Join default whiteboard room
+        newSocket.emit('join-whiteboard', roomId);
       });
 
       newSocket.on('disconnect', () => {
@@ -97,15 +90,8 @@ export const WebSocketProvider = ({ children }) => {
   // WebSocket utility functions
   const joinRoom = (newRoomId) => {
     if (socket && isConnected) {
-      socket.emit('leave-room', { roomId: roomId });
-      socket.emit('join-room', {
-        roomId: newRoomId,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        },
-      });
+      socket.emit('leave-whiteboard', roomId);
+      socket.emit('join-whiteboard', newRoomId);
       setRoomId(newRoomId);
     }
   };
