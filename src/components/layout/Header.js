@@ -77,7 +77,7 @@ const Header = ({ activeTab, title, subtitle }) => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="header px-6 py-4"
+      className="header px-6 py-4 relative z-30"
     >
       <div className="flex items-center justify-between">
         {/* Title Section */}
@@ -86,8 +86,8 @@ const Header = ({ activeTab, title, subtitle }) => {
           <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
         </div>
 
-        {/* Search Bar */}
-        <div className="flex-1 max-w-md mx-8">
+        {/* Search Bar - Hidden on mobile */}
+        <div className="flex-1 max-w-md mx-8 hidden md:block">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-text-muted-light dark:text-text-muted-dark" />
@@ -105,10 +105,10 @@ const Header = ({ activeTab, title, subtitle }) => {
           {tabInfo.actions.map((action, index) => (
             <button
               key={index}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary flex items-center space-x-2 hidden sm:flex lg:flex"
             >
               <action.icon className="h-4 w-4" />
-              <span>{action.label}</span>
+              <span className="hidden lg:inline">{action.label}</span>
               {action.count && (
                 <span className="notification-badge px-2 py-1">
                   {action.count}
