@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  ownedWhiteboards Whiteboard[] @relation("WhiteboardOwner")
+  collaborations   WhiteboardCollaborator[]
+  sessions         UserSession[]
+  chatMessages     ChatMessage[]
+
+  @@map("users")
+}
+
+model Whiteboard {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  thumbnail   String?
+  isPublic    Boolean  @default(false)
+  canvasData  Json?    // Fabric.js canvas data
+  settings    Json?    // Whiteboard settings (grid, zoom, etc.)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  owner         User                     @relation("WhiteboardOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  collaborators WhiteboardCollaborator[]
+  chatMessages  ChatMessage[]
+
+  @@map("whiteboards")
+}
+
+model WhiteboardCollaborator {
+  id           String              @id @default(cuid())
+  role         CollaboratorRole    @default(VIEWER)
+  permissions  CollaboratorPermission[]
+  joinedAt     DateTime            @default(now())
+
+  // Relations
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  whiteboard   Whiteboard @relation(fields: [whiteboardId], references: [id], onDelete: Cascade)
+  whiteboardId String
+
+  @@unique([userId, whiteboardId])
+  @@map("whiteboard_collaborators")
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@map("user_sessions")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  type      MessageType @default(TEXT)
+  createdAt DateTime @default(now())
+
+  // Relations
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  whiteboard   Whiteboard @relation(fields: [whiteboardId], references: [id], onDelete: Cascade)
+  whiteboardId String
+
+  @@map("chat_messages")
+}
+
+enum CollaboratorRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+enum CollaboratorPermission {
+  CAN_EDIT
+  CAN_COMMENT
+  CAN_SHARE
+  CAN_EXPORT
+}
+
+enum MessageType {
+  TEXT
+  SYSTEM
+  FILE
+}
