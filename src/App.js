@@ -22,9 +22,11 @@ function App() {
     <Router>
       <ThemeProvider>
         <AuthProvider>
-          <div className="App">
-            <AppContent />
-          </div>
+          <ToastProvider>
+            <div className="App">
+              <AppContent />
+            </div>
+          </ToastProvider>
         </AuthProvider>
       </ThemeProvider>
     </Router>
