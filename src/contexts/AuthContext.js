@@ -62,21 +62,44 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', err);
       console.error('Error response:', err.response?.data);
 
-      // Fallback for demo account when backend is unreachable
-      if (email === 'demo@tomoboard.com' && password === 'password123') {
-        console.log('Using fallback demo auth');
-        const demoUser = {
-          id: 'demo-user-1',
-          email: 'demo@tomoboard.com',
-          username: 'demo_user',
-          firstName: 'Demo',
-          lastName: 'User',
-          avatar: null,
-          token: 'demo-token'
-        };
-        setUser(demoUser);
-        localStorage.setItem('accessToken', 'demo-token');
-        return { success: true };
+      // Check if it's a network error (backend unreachable)
+      if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
+        console.log('Backend unreachable, using fallback auth');
+
+        // Demo account fallback
+        if (email === 'demo@tomoboard.com' && password === 'password123') {
+          const demoUser = {
+            id: 'demo-user-1',
+            email: 'demo@tomoboard.com',
+            username: 'demo_user',
+            firstName: 'Demo',
+            lastName: 'User',
+            avatar: null,
+            token: 'demo-token'
+          };
+          setUser(demoUser);
+          localStorage.setItem('accessToken', 'demo-token');
+          return { success: true };
+        }
+
+        // Admin account fallback
+        if (email === 'admin@tomoboard.com' && password === 'password123') {
+          const adminUser = {
+            id: 'admin-user-1',
+            email: 'admin@tomoboard.com',
+            username: 'admin',
+            firstName: 'Admin',
+            lastName: 'User',
+            avatar: null,
+            token: 'admin-token'
+          };
+          setUser(adminUser);
+          localStorage.setItem('accessToken', 'admin-token');
+          return { success: true };
+        }
+
+        setError('Backend unavailable. Try demo@tomoboard.com / password123');
+        return { success: false, error: 'Backend unavailable. Try demo@tomoboard.com / password123' };
       }
 
       const message = err.response?.data?.error || err.message || 'Login failed. Please try again.';
