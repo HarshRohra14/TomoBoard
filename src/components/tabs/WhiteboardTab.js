@@ -112,6 +112,99 @@ const WhiteboardTab = ({ isToolbarVisible = true, isSidebarVisible = true }) => 
           </div>
         </motion.div>
 
+        {/* Floating Toolbar (when main toolbar is hidden) */}
+        {!isToolbarVisible && (
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-16 left-4 z-30 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2"
+          >
+            <div className="flex items-center space-x-1">
+              {/* Essential tools */}
+              <button
+                onClick={() => setActiveTool('select')}
+                className={`p-2 rounded-lg transition-colors ${
+                  activeTool === 'select'
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}
+                title="Select"
+              >
+                <MousePointer2 className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setActiveTool('pen')}
+                className={`p-2 rounded-lg transition-colors ${
+                  activeTool === 'pen'
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}
+                title="Pen"
+              >
+                <Pen className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setActiveTool('eraser')}
+                className={`p-2 rounded-lg transition-colors ${
+                  activeTool === 'eraser'
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}
+                title="Eraser"
+              >
+                <Eraser className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setActiveTool('rectangle')}
+                className={`p-2 rounded-lg transition-colors ${
+                  activeTool === 'rectangle'
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}
+                title="Rectangle"
+              >
+                <Square className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setActiveTool('circle')}
+                className={`p-2 rounded-lg transition-colors ${
+                  activeTool === 'circle'
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}
+                title="Circle"
+              >
+                <Circle className="h-4 w-4" />
+              </button>
+              <div className="w-px h-6 bg-gray-200 dark:bg-gray-600 mx-1"></div>
+              <button
+                onClick={handleUndo}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
+                title="Undo"
+              >
+                <Undo className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleRedo}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
+                title="Redo"
+              >
+                <Redo className="h-4 w-4" />
+              </button>
+              <div className="w-px h-6 bg-gray-200 dark:bg-gray-600 mx-1"></div>
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="w-8 h-8 rounded border border-gray-200 dark:border-gray-600 cursor-pointer"
+                title="Color"
+              />
+            </div>
+          </motion.div>
+        )}
+
         {/* Canvas */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
