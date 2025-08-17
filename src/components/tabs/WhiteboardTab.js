@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import WhiteboardCanvas from '../whiteboard/WhiteboardCanvas';
 import WhiteboardToolbar from '../whiteboard/WhiteboardToolbar';
-import { Users, Share2 } from 'lucide-react';
+import { Users, Share2, MousePointer2, Pen, Eraser, Square, Circle, Undo, Redo } from 'lucide-react';
 
 const WhiteboardTab = ({ isToolbarVisible = true, isSidebarVisible = true }) => {
   const [activeTool, setActiveTool] = useState('pen');
