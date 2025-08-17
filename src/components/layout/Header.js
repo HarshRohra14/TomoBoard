@@ -8,11 +8,24 @@ import {
   Bell,
   Search,
   Plus,
-  Sparkles
+  Sparkles,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  SidebarClose,
+  SidebarOpen
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
 
-const Header = ({ activeTab, title, subtitle }) => {
+const Header = ({
+  activeTab,
+  title,
+  subtitle,
+  isSidebarVisible,
+  isToolbarVisible,
+  onToggleSidebar,
+  onToggleToolbar
+}) => {
   const getTabInfo = () => {
     switch (activeTab) {
       case 'whiteboard':
@@ -80,10 +93,33 @@ const Header = ({ activeTab, title, subtitle }) => {
       className="header px-6 py-4 relative z-30"
     >
       <div className="flex items-center justify-between">
-        {/* Title Section */}
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">{title || tabInfo.title}</h1>
-          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
+        {/* Toggle Controls & Title Section */}
+        <div className="flex items-center space-x-4">
+          {/* Sidebar Toggle */}
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+            title={isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
+          >
+            {isSidebarVisible ? <SidebarClose className="h-5 w-5" /> : <SidebarOpen className="h-5 w-5" />}
+          </button>
+
+          {/* Toolbar Toggle (only show on whiteboard tab) */}
+          {activeTab === 'whiteboard' && (
+            <button
+              onClick={onToggleToolbar}
+              className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+              title={isToolbarVisible ? 'Hide Toolbar' : 'Show Toolbar'}
+            >
+              {isToolbarVisible ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeftOpen className="h-5 w-5" />}
+            </button>
+          )}
+
+          {/* Title */}
+          <div>
+            <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">{title || tabInfo.title}</h1>
+            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
+          </div>
         </div>
 
         {/* Search Bar - Hidden on mobile */}
