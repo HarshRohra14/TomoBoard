@@ -8,14 +8,10 @@ import {
   Bell,
   Search,
   Plus,
-  Sparkles,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
-  SidebarClose,
-  SidebarOpen
+  Sparkles
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
+import ViewToggle from '../common/ViewToggle';
 
 const Header = ({
   activeTab,
@@ -94,26 +90,29 @@ const Header = ({
     >
       <div className="flex items-center justify-between">
         {/* Toggle Controls & Title Section */}
-        <div className="flex items-center space-x-4">
-          {/* Sidebar Toggle */}
-          <button
-            onClick={onToggleSidebar}
-            className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-            title={isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
-          >
-            {isSidebarVisible ? <SidebarClose className="h-5 w-5" /> : <SidebarOpen className="h-5 w-5" />}
-          </button>
+        <div className="flex items-center space-x-6">
+          {/* Modern Toggle Group */}
+          <div className="flex items-center space-x-2 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+            {/* Sidebar Toggle */}
+            <ViewToggle
+              type="sidebar"
+              isVisible={isSidebarVisible}
+              onToggle={onToggleSidebar}
+              variant="pill"
+              size="sm"
+            />
 
-          {/* Toolbar Toggle (only show on whiteboard tab) */}
-          {activeTab === 'whiteboard' && (
-            <button
-              onClick={onToggleToolbar}
-              className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-              title={isToolbarVisible ? 'Hide Toolbar' : 'Show Toolbar'}
-            >
-              {isToolbarVisible ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeftOpen className="h-5 w-5" />}
-            </button>
-          )}
+            {/* Toolbar Toggle (only show on whiteboard tab) */}
+            {activeTab === 'whiteboard' && (
+              <ViewToggle
+                type="toolbar"
+                isVisible={isToolbarVisible}
+                onToggle={onToggleToolbar}
+                variant="pill"
+                size="sm"
+              />
+            )}
+          </div>
 
           {/* Title */}
           <div>
