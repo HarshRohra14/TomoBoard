@@ -42,21 +42,26 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      
+      console.log('Attempting login with:', email);
+
       const response = await authAPI.login({ email, password });
+      console.log('Login response:', response.data);
+
       const { user: userData, tokens } = response.data;
-      
+
       // Store tokens
       localStorage.setItem('accessToken', tokens.accessToken);
       localStorage.setItem('refreshToken', tokens.refreshToken);
-      
+
       // Set user with token for WebSocket
       const userWithToken = { ...userData, token: tokens.accessToken };
       setUser(userWithToken);
-      
+
       return { success: true };
     } catch (err) {
-      const message = err.response?.data?.error || 'Login failed. Please try again.';
+      console.error('Login error:', err);
+      console.error('Error response:', err.response?.data);
+      const message = err.response?.data?.error || err.message || 'Login failed. Please try again.';
       setError(message);
       return { success: false, error: message };
     }
