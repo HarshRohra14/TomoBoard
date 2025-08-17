@@ -112,96 +112,116 @@ const WhiteboardTab = ({ isToolbarVisible = true, isSidebarVisible = true }) => 
           </div>
         </motion.div>
 
-        {/* Floating Toolbar (when main toolbar is hidden) */}
+        {/* Modern Floating Toolbar (when main toolbar is hidden) */}
         {!isToolbarVisible && (
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-16 left-4 z-30 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2"
+            initial={{ y: -20, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -20, opacity: 0, scale: 0.95 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              duration: 0.3
+            }}
+            className="absolute top-16 left-4 z-30 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-3"
           >
-            <div className="flex items-center space-x-1">
-              {/* Essential tools */}
-              <button
-                onClick={() => setActiveTool('select')}
-                className={`p-2 rounded-lg transition-colors ${
-                  activeTool === 'select'
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-                title="Select"
-              >
-                <MousePointer2 className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setActiveTool('pen')}
-                className={`p-2 rounded-lg transition-colors ${
-                  activeTool === 'pen'
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-                title="Pen"
-              >
-                <Pen className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setActiveTool('eraser')}
-                className={`p-2 rounded-lg transition-colors ${
-                  activeTool === 'eraser'
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-                title="Eraser"
-              >
-                <Eraser className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setActiveTool('rectangle')}
-                className={`p-2 rounded-lg transition-colors ${
-                  activeTool === 'rectangle'
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-                title="Rectangle"
-              >
-                <Square className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setActiveTool('circle')}
-                className={`p-2 rounded-lg transition-colors ${
-                  activeTool === 'circle'
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-                title="Circle"
-              >
-                <Circle className="h-4 w-4" />
-              </button>
-              <div className="w-px h-6 bg-gray-200 dark:bg-gray-600 mx-1"></div>
-              <button
-                onClick={handleUndo}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
-                title="Undo"
-              >
-                <Undo className="h-4 w-4" />
-              </button>
-              <button
-                onClick={handleRedo}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
-                title="Redo"
-              >
-                <Redo className="h-4 w-4" />
-              </button>
-              <div className="w-px h-6 bg-gray-200 dark:bg-gray-600 mx-1"></div>
-              <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="w-8 h-8 rounded border border-gray-200 dark:border-gray-600 cursor-pointer"
-                title="Color"
-              />
+            <div className="flex items-center space-x-2">
+              {/* Tool Group */}
+              <div className="flex items-center space-x-1 bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-1">
+                {[
+                  { id: 'select', icon: MousePointer2, label: 'Select' },
+                  { id: 'pen', icon: Pen, label: 'Pen' },
+                  { id: 'eraser', icon: Eraser, label: 'Eraser' },
+                  { id: 'rectangle', icon: Square, label: 'Rectangle' },
+                  { id: 'circle', icon: Circle, label: 'Circle' }
+                ].map((tool) => (
+                  <motion.button
+                    key={tool.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setActiveTool(tool.id)}
+                    className={`
+                      relative p-2.5 rounded-lg transition-all duration-200
+                      ${activeTool === tool.id
+                        ? 'bg-sakura-500 text-white shadow-lg shadow-sakura-500/25'
+                        : 'hover:bg-white/80 dark:hover:bg-gray-600/80 text-gray-600 dark:text-gray-400'
+                      }
+                    `}
+                    title={tool.label}
+                  >
+                    <tool.icon className="h-4 w-4" />
+                    {/* Active indicator */}
+                    {activeTool === tool.id && (
+                      <motion.div
+                        layoutId="activeToolIndicator"
+                        className="absolute inset-0 bg-sakura-500 rounded-lg -z-10"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Divider */}
+              <div className="w-px h-8 bg-gray-200 dark:bg-gray-600"></div>
+
+              {/* Action Group */}
+              <div className="flex items-center space-x-1">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleUndo}
+                  className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
+                  title="Undo (Ctrl+Z)"
+                >
+                  <Undo className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleRedo}
+                  className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
+                  title="Redo (Ctrl+Y)"
+                >
+                  <Redo className="h-4 w-4" />
+                </motion.button>
+              </div>
+
+              {/* Divider */}
+              <div className="w-px h-8 bg-gray-200 dark:bg-gray-600"></div>
+
+              {/* Color Picker */}
+              <div className="relative">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative"
+                >
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="w-10 h-10 rounded-xl border-2 border-gray-200 dark:border-gray-600 cursor-pointer bg-transparent"
+                    title="Choose Color"
+                    style={{
+                      background: `linear-gradient(45deg, ${color} 50%, transparent 50%)`,
+                    }}
+                  />
+                  <div
+                    className="absolute inset-1 rounded-lg pointer-events-none border border-white/50"
+                    style={{ backgroundColor: color }}
+                  />
+                </motion.div>
+              </div>
             </div>
+
+            {/* Tooltip indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white/90 dark:bg-gray-800/90 rotate-45 border-r border-b border-gray-200/50 dark:border-gray-700/50"
+            />
           </motion.div>
         )}
 
