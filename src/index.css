@@ -93,6 +93,7 @@
     @apply bg-surface-light border-r border-border-light;
     @apply dark:bg-surface-dark dark:border-border-dark;
     @apply transition-colors duration-200;
+    min-width: 256px;
   }
   
   /* Loading spinner with Sakura colors */
@@ -129,8 +130,32 @@
   .dark .scrollbar-sakura::-webkit-scrollbar-thumb {
     background-color: theme(colors.sakura.300);
   }
-  
+
   .dark .scrollbar-sakura::-webkit-scrollbar-thumb:hover {
     background-color: theme(colors.sakura.400);
+  }
+
+  /* Responsive canvas container */
+  .canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Ensure proper stacking context */
+  .whiteboard-toolbar {
+    z-index: 10;
+  }
+
+  .whiteboard-canvas {
+    z-index: 1;
+  }
+
+  /* Mobile responsive fixes */
+  @media (max-width: 640px) {
+    .sidebar {
+      min-width: 240px;
+    }
   }
 }

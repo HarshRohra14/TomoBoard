@@ -1,16 +1,38 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 
-const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
+const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVisible = true, isSidebarVisible = true }) => {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
+  // Calculate responsive canvas dimensions
+  const calculateCanvasDimensions = () => {
+    const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
+    const mainSidebarWidth = 256; // Main sidebar width
+    const headerHeight = 80; // Approximate header height
+
+    let totalSidebarWidth = 0;
+    if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
+    if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
+
+    const availableWidth = window.innerWidth - totalSidebarWidth;
+    const availableHeight = window.innerHeight - headerHeight;
+
+    return {
+      width: Math.max(availableWidth, 400), // Minimum width
+      height: Math.max(availableHeight, 300) // Minimum height
+    };
+  };
+
   useEffect(() => {
+
+    const { width, height } = calculateCanvasDimensions();
+
     // Initialize Fabric.js canvas
     const canvas = new fabric.Canvas(canvasRef.current, {
-      width: window.innerWidth - 256, // Adjust for sidebar
-      height: window.innerHeight - 80, // Adjust for header
+      width,
+      height,
       backgroundColor: 'white',
       selection: tool === 'select',
     });
@@ -27,10 +49,22 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
 
     // Handle window resize
     const handleResize = () => {
-      canvas.setDimensions({
-        width: window.innerWidth - 256,
-        height: window.innerHeight - 80,
-      });
+      const toolbarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320);
+      const mainSidebarWidth = 256;
+      const headerHeight = 80;
+
+      let totalSidebarWidth = 0;
+      if (isSidebarVisible) totalSidebarWidth += mainSidebarWidth;
+      if (isToolbarVisible) totalSidebarWidth += toolbarWidth;
+
+      const availableWidth = window.innerWidth - totalSidebarWidth;
+      const availableHeight = window.innerHeight - headerHeight;
+
+      const width = Math.max(availableWidth, 400);
+      const height = Math.max(availableHeight, 300);
+
+      canvas.setDimensions({ width, height });
+      canvas.renderAll();
     };
 
     window.addEventListener('resize', handleResize);
@@ -39,13 +73,22 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
       window.removeEventListener('resize', handleResize);
       canvas.dispose();
     };
-  }, []);
+  }, [isToolbarVisible, isSidebarVisible]);
 
   useEffect(() => {
     if (fabricCanvasRef.current) {
       updateCanvasMode(fabricCanvasRef.current, tool);
     }
   }, [tool, color, strokeWidth]);
+
+  // Update canvas dimensions when sidebar/toolbar visibility changes
+  useEffect(() => {
+    if (fabricCanvasRef.current) {
+      const { width, height } = calculateCanvasDimensions();
+      fabricCanvasRef.current.setDimensions({ width, height });
+      fabricCanvasRef.current.renderAll();
+    }
+  }, [isToolbarVisible, isSidebarVisible]);
 
   const updateCanvasMode = (canvas, currentTool) => {
     // Clear any existing drawing mode
@@ -193,10 +236,10 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900">
       <canvas
         ref={canvasRef}
-        className="border border-gray-200 bg-white"
+        className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 max-w-full max-h-full"
       />
     </div>
   );

@@ -11,8 +11,19 @@ import {
   Sparkles
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
+import ViewToggle from '../common/ViewToggle';
+import ShortcutsIndicator from '../common/ShortcutsIndicator';
 
-const Header = ({ activeTab, title, subtitle }) => {
+const Header = ({
+  activeTab,
+  title,
+  subtitle,
+  isSidebarVisible,
+  isToolbarVisible,
+  onToggleSidebar,
+  onToggleToolbar,
+  shortcuts = []
+}) => {
   const getTabInfo = () => {
     switch (activeTab) {
       case 'whiteboard':
@@ -77,17 +88,43 @@ const Header = ({ activeTab, title, subtitle }) => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="header px-6 py-4"
+      className="header px-6 py-4 relative z-30"
     >
       <div className="flex items-center justify-between">
-        {/* Title Section */}
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">{title || tabInfo.title}</h1>
-          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
+        {/* Toggle Controls & Title Section */}
+        <div className="flex items-center space-x-6">
+          {/* Modern Toggle Group */}
+          <div className="flex items-center space-x-2 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+            {/* Sidebar Toggle */}
+            <ViewToggle
+              type="sidebar"
+              isVisible={isSidebarVisible}
+              onToggle={onToggleSidebar}
+              variant="pill"
+              size="sm"
+            />
+
+            {/* Toolbar Toggle (only show on whiteboard tab) */}
+            {activeTab === 'whiteboard' && (
+              <ViewToggle
+                type="toolbar"
+                isVisible={isToolbarVisible}
+                onToggle={onToggleToolbar}
+                variant="pill"
+                size="sm"
+              />
+            )}
+          </div>
+
+          {/* Title */}
+          <div>
+            <h1 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">{title || tabInfo.title}</h1>
+            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{subtitle || tabInfo.subtitle}</p>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="flex-1 max-w-md mx-8">
+        {/* Search Bar - Hidden on mobile */}
+        <div className="flex-1 max-w-md mx-8 hidden md:block">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-text-muted-light dark:text-text-muted-dark" />
@@ -105,10 +142,10 @@ const Header = ({ activeTab, title, subtitle }) => {
           {tabInfo.actions.map((action, index) => (
             <button
               key={index}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary flex items-center space-x-2 hidden sm:flex lg:flex"
             >
               <action.icon className="h-4 w-4" />
-              <span>{action.label}</span>
+              <span className="hidden lg:inline">{action.label}</span>
               {action.count && (
                 <span className="notification-badge px-2 py-1">
                   {action.count}
@@ -116,6 +153,9 @@ const Header = ({ activeTab, title, subtitle }) => {
               )}
             </button>
           ))}
+
+          {/* Shortcuts Indicator */}
+          <ShortcutsIndicator shortcuts={shortcuts} />
 
           {/* Theme Toggle */}
           <ThemeToggle />
