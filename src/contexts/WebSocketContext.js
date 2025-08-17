@@ -26,12 +26,11 @@ export const WebSocketProvider = ({ children }) => {
     if (user) {
       // Initialize socket connection
       const newSocket = io(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:3001', {
-        query: {
-          userId: user.id,
-          userName: user.name,
-          userAvatar: user.avatar,
+        auth: {
+          token: user.token || localStorage.getItem('accessToken'),
         },
         autoConnect: true,
+        transports: ['websocket', 'polling'],
       });
 
       socketRef.current = newSocket;
