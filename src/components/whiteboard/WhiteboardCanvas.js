@@ -7,10 +7,25 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
   const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
+    // Calculate responsive canvas dimensions
+    const calculateCanvasDimensions = () => {
+      const sidebarWidth = window.innerWidth < 640 ? 256 : (window.innerWidth < 1024 ? 288 : 320); // sm:w-72 lg:w-80
+      const headerHeight = 80; // Approximate header height
+      const availableWidth = window.innerWidth - sidebarWidth - 256; // Account for main sidebar
+      const availableHeight = window.innerHeight - headerHeight;
+
+      return {
+        width: Math.max(availableWidth, 400), // Minimum width
+        height: Math.max(availableHeight, 300) // Minimum height
+      };
+    };
+
+    const { width, height } = calculateCanvasDimensions();
+
     // Initialize Fabric.js canvas
     const canvas = new fabric.Canvas(canvasRef.current, {
-      width: window.innerWidth - 256, // Adjust for sidebar
-      height: window.innerHeight - 80, // Adjust for header
+      width,
+      height,
       backgroundColor: 'white',
       selection: tool === 'select',
     });
@@ -27,10 +42,9 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
 
     // Handle window resize
     const handleResize = () => {
-      canvas.setDimensions({
-        width: window.innerWidth - 256,
-        height: window.innerHeight - 80,
-      });
+      const { width, height } = calculateCanvasDimensions();
+      canvas.setDimensions({ width, height });
+      canvas.renderAll();
     };
 
     window.addEventListener('resize', handleResize);
@@ -193,10 +207,10 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady }) => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900">
       <canvas
         ref={canvasRef}
-        className="border border-gray-200 bg-white"
+        className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 max-w-full max-h-full"
       />
     </div>
   );
