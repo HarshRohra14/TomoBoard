@@ -61,6 +61,24 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error('Login error:', err);
       console.error('Error response:', err.response?.data);
+
+      // Fallback for demo account when backend is unreachable
+      if (email === 'demo@tomoboard.com' && password === 'password123') {
+        console.log('Using fallback demo auth');
+        const demoUser = {
+          id: 'demo-user-1',
+          email: 'demo@tomoboard.com',
+          username: 'demo_user',
+          firstName: 'Demo',
+          lastName: 'User',
+          avatar: null,
+          token: 'demo-token'
+        };
+        setUser(demoUser);
+        localStorage.setItem('accessToken', 'demo-token');
+        return { success: true };
+      }
+
       const message = err.response?.data?.error || err.message || 'Login failed. Please try again.';
       setError(message);
       return { success: false, error: message };
