@@ -1,10 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
+import { useWebSocket } from '../../contexts/WebSocketContext';
 
 const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVisible = true, isSidebarVisible = true }) => {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const { sendCanvasUpdate, sendCanvasSync, socket, isConnected } = useWebSocket();
+  const autoSaveTimeoutRef = useRef(null);
 
   // Calculate responsive canvas dimensions
   const calculateCanvasDimensions = () => {
@@ -41,6 +44,12 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVi
 
     // Configure canvas based on tool
     updateCanvasMode(canvas, tool);
+
+    // Add canvas change listeners for auto-save
+    setupCanvasListeners(canvas);
+
+    // Listen for WebSocket canvas updates from other users
+    setupWebSocketListeners(canvas);
 
     // Notify parent component
     if (onCanvasReady) {
@@ -234,6 +243,107 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVi
       text.enterEditing();
     });
   };
+
+  // Setup canvas change listeners for auto-save
+  const setupCanvasListeners = (canvas) => {
+    const handleCanvasChange = (event) => {
+      console.log('Canvas changed:', event.type);
+
+      // Send real-time update for specific operations
+      if (event.type === 'object:added' || event.type === 'object:modified' || event.type === 'object:removed') {
+        if (sendCanvasUpdate && isConnected) {
+          sendCanvasUpdate(event.type, {
+            objects: canvas.toJSON(),
+            timestamp: Date.now()
+          });
+        }
+      }
+
+      // Auto-save with debouncing
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+
+      autoSaveTimeoutRef.current = setTimeout(() => {
+        saveCanvasToStorage(canvas);
+        if (sendCanvasSync && isConnected) {
+          sendCanvasSync(canvas.toJSON());
+        }
+      }, 2000); // Save after 2 seconds of inactivity
+    };
+
+    // Listen to canvas events
+    canvas.on('object:added', handleCanvasChange);
+    canvas.on('object:modified', handleCanvasChange);
+    canvas.on('object:removed', handleCanvasChange);
+    canvas.on('path:created', handleCanvasChange); // For free drawing
+    canvas.on('object:moving', handleCanvasChange);
+    canvas.on('object:scaling', handleCanvasChange);
+    canvas.on('object:rotating', handleCanvasChange);
+  };
+
+  // Setup WebSocket listeners for real-time collaboration
+  const setupWebSocketListeners = (canvas) => {
+    if (!socket) return;
+
+    socket.on('canvas-update', (data) => {
+      console.log('Received canvas update from other user:', data);
+      // Apply changes from other users without triggering our own events
+      canvas.off('object:added object:modified object:removed');
+
+      // Update canvas with received data
+      if (data.objectData && data.objectData.objects) {
+        canvas.loadFromJSON(data.objectData.objects, () => {
+          canvas.renderAll();
+          // Re-enable event listeners
+          setupCanvasListeners(canvas);
+        });
+      }
+    });
+
+    socket.on('canvas-sync', (data) => {
+      console.log('Received full canvas sync:', data);
+      if (data.canvasData) {
+        canvas.loadFromJSON(data.canvasData, () => {
+          canvas.renderAll();
+        });
+      }
+    });
+  };
+
+  // Save canvas to local storage
+  const saveCanvasToStorage = (canvas) => {
+    try {
+      const canvasData = canvas.toJSON();
+      localStorage.setItem('tomoboard_canvas_data', JSON.stringify(canvasData));
+      console.log('Canvas auto-saved to localStorage');
+    } catch (error) {
+      console.error('Failed to save canvas:', error);
+    }
+  };
+
+  // Load canvas from local storage
+  const loadCanvasFromStorage = (canvas) => {
+    try {
+      const savedData = localStorage.getItem('tomoboard_canvas_data');
+      if (savedData) {
+        const canvasData = JSON.parse(savedData);
+        canvas.loadFromJSON(canvasData, () => {
+          canvas.renderAll();
+          console.log('Canvas loaded from localStorage');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load canvas:', error);
+    }
+  };
+
+  // Load saved canvas data on mount
+  useEffect(() => {
+    if (fabricCanvasRef.current) {
+      loadCanvasFromStorage(fabricCanvasRef.current);
+    }
+  }, []);
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900">
