@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://tomoboard-backend.vercel.app';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://tomoboard-backend-nu.vercel.app';
 
 // Create axios instance with base configuration
 const api = axios.create({
