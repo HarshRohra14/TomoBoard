@@ -24,19 +24,22 @@ const DEMO_USERS = [
 
 export const offlineAuth = {
   login: async (email, password) => {
-    console.log('Offline login attempt:', email);
-    
+    console.log('Offline login attempt:', email, 'password length:', password?.length);
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     const user = DEMO_USERS.find(u => u.email === email && u.isActive);
-    
+    console.log('Found user:', user ? user.email : 'none');
+    console.log('Password match:', user ? (user.password === password) : 'no user');
+
     if (!user || user.password !== password) {
+      console.error('Login failed - user:', !!user, 'password match:', user ? (user.password === password) : false);
       throw new Error('Invalid credentials');
     }
-    
+
     const { password: _, ...userWithoutPassword } = user;
-    
+
     return {
       data: {
         message: 'Login successful (offline mode)',
@@ -90,24 +93,48 @@ export const offlineAuth = {
   
   me: async (token) => {
     console.log('Offline me request:', token);
-    
-    if (!token || !token.startsWith('offline_token_')) {
+
+    if (!token) {
       throw new Error('Invalid token');
     }
-    
-    const userId = token.split('_')[2];
-    const user = DEMO_USERS.find(u => u.id === userId);
-    
-    if (!user) {
-      throw new Error('User not found');
-    }
-    
-    const { password: _, ...userWithoutPassword } = user;
-    
-    return {
-      data: {
-        user: userWithoutPassword
+
+    // Handle both offline tokens and regular tokens
+    if (token.startsWith('offline_token_')) {
+      const parts = token.split('_');
+      if (parts.length >= 3) {
+        const userId = parts[2];
+        const user = DEMO_USERS.find(u => u.id === userId);
+
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        const { password: _, ...userWithoutPassword } = user;
+
+        return {
+          data: {
+            user: userWithoutPassword
+          }
+        };
       }
-    };
+    }
+
+    // For demo tokens, just return the demo user
+    if (token === 'demo-token' || token === 'admin-token') {
+      const user = token === 'demo-token'
+        ? DEMO_USERS.find(u => u.email === 'demo@tomoboard.com')
+        : DEMO_USERS.find(u => u.email === 'admin@tomoboard.com');
+
+      if (user) {
+        const { password: _, ...userWithoutPassword } = user;
+        return {
+          data: {
+            user: userWithoutPassword
+          }
+        };
+      }
+    }
+
+    throw new Error('Invalid token');
   }
 };
