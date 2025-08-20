@@ -28,10 +28,35 @@ export const AuthProvider = ({ children }) => {
           // Add token to user object for WebSocket authentication
           setUser({ ...userData, token });
         } catch (error) {
-          // Token is invalid, clear it
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
           console.error('Auth check failed:', error);
+
+          // Handle network errors - try offline auth validation
+          if (error.code === 'ERR_NETWORK' || error.message === 'Network Error' || !error.response) {
+            console.log('Network error during auth check, validating offline token');
+
+            // Check if it's an offline token
+            if (token.startsWith('offline_token_')) {
+              try {
+                const response = await offlineAuth.me(token);
+                const userData = response.data.user;
+                setUser({ ...userData, token });
+                console.log('Offline auth validation successful');
+              } catch (offlineError) {
+                console.error('Offline auth validation failed:', offlineError);
+                // Clear invalid offline token
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+              }
+            } else {
+              console.log('Network unavailable, keeping existing session if valid');
+              // For demo purposes, keep the session if it exists
+              // In production, you might want to clear it
+            }
+          } else {
+            // Token is invalid, clear it
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+          }
         }
       }
       setLoading(false);
