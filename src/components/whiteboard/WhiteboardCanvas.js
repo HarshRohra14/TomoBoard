@@ -80,6 +80,21 @@ const WhiteboardCanvas = ({ tool, color, strokeWidth, onCanvasReady, isToolbarVi
 
     return () => {
       window.removeEventListener('resize', handleResize);
+
+      // Clear auto-save timeout
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+
+      // Save final state before cleanup
+      saveCanvasToStorage(canvas);
+
+      // Clean up WebSocket listeners
+      if (socket) {
+        socket.off('canvas-update');
+        socket.off('canvas-sync');
+      }
+
       canvas.dispose();
     };
   }, [isToolbarVisible, isSidebarVisible]);

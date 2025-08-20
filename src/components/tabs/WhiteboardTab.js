@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import WhiteboardCanvas from '../whiteboard/WhiteboardCanvas';
 import WhiteboardToolbar from '../whiteboard/WhiteboardToolbar';
+import SaveIndicator from '../whiteboard/SaveIndicator';
 import { Users, Share2, MousePointer2, Pen, Eraser, Square, Circle, Undo, Redo } from 'lucide-react';
 
 const WhiteboardTab = ({ isToolbarVisible = true, isSidebarVisible = true }) => {
