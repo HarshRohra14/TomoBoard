@@ -48,9 +48,21 @@ export const AuthProvider = ({ children }) => {
                 localStorage.removeItem('refreshToken');
               }
             } else {
-              console.log('Network unavailable, keeping existing session if valid');
-              // For demo purposes, keep the session if it exists
-              // In production, you might want to clear it
+              console.log('Network unavailable, attempting to restore session from demo credentials');
+              // Try to restore demo session if credentials are available
+              const storedEmail = localStorage.getItem('demo_email');
+              if (storedEmail === 'demo@tomoboard.com' || storedEmail === 'admin@tomoboard.com') {
+                const demoUser = {
+                  id: storedEmail === 'demo@tomoboard.com' ? 'demo-user-1' : 'admin-user-1',
+                  email: storedEmail,
+                  username: storedEmail === 'demo@tomoboard.com' ? 'demo_user' : 'admin',
+                  firstName: storedEmail === 'demo@tomoboard.com' ? 'Demo' : 'Admin',
+                  lastName: 'User',
+                  avatar: null
+                };
+                setUser({ ...demoUser, token });
+                console.log('Restored demo session');
+              }
             }
           } else {
             // Token is invalid, clear it
@@ -105,6 +117,9 @@ export const AuthProvider = ({ children }) => {
           // Set user with token
           const userWithToken = { ...userData, token: tokens.accessToken };
           setUser(userWithToken);
+
+          // Store email for session restoration
+          localStorage.setItem('demo_email', email);
 
           console.log('Offline login successful');
           return { success: true };
